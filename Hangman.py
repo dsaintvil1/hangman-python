@@ -4,6 +4,7 @@ Danerick Saint-Vil
 """
 
 import random
+import time
 
 # Word bank of words to use for the game
 word_bank = [
@@ -43,7 +44,7 @@ word_bank = [
     "rainbow", "fireworks", "treasure", "dragon", "castle", "wizard", "potion"]
 ]
 
-round_bank = []
+round_bank = [] # Generates the bank of words for each round
 def reset():
     for x in range(len(word_bank)):
         round_bank.append(word_bank[x][random.randrange(len(word_bank[x]))])
@@ -68,8 +69,47 @@ def draw(step):
         print(f"|{"/ \\":>7}")
     print("|\n")
 
-draw(6)
+YN = ""
 
 
+def round():
+    category = ["Animals", "Food", "Places", "Science & Tech", "Sports", "Misc"]
+    posit = 0
+    for x in round_bank:
+        print(f"CATEGORY: {category[posit]}")
+        posit += 1
+        blank = ""
+        current_word = x
+        attempt = 0
+        incorrect_letters = []
+        for x in range(len(current_word)):
+            blank += "_" 
+        while attempt <= 5:
+            draw(attempt)
+            print(f"\n\n{blank}\n\nIncorrect Letters: {incorrect_letters}\n")
+            guess = input("Guess a letter: ")
+            if guess not in current_word:
+                attempt += 1
+                incorrect_letters.append(guess)
+            else:
+                for x in range(len(current_word)):
+                    if guess == current_word[x]:
+                        blank = list(blank)
+                        blank[x] = guess
+                        blank = "".join(blank)
+            if blank == current_word:
+                print("YOU WIN\nGenerating next category...")
+                time.sleep(3)
+                break
+        else:
+            draw(attempt)
+            print(f"\n\nYOU LOSE! The word was {current_word}\n\nGenerating next category...")   
+            time.sleep(3)             
+    
 
-
+while YN != "no":
+    reset()
+    round()
+    YN = input("Do you want to continue? (yes/no): ").lower()
+else:
+    print("Goodbye!")  
